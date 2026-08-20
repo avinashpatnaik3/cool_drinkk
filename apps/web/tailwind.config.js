@@ -50,6 +50,14 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
+				brand: {
+					dark: '#101212',
+					cream: '#F5F1E8',
+					accent: '#B7D334',
+					green: '#6F7F38',
+					muted: '#8D918A',
+					white: '#FFFFFF',
+				},
 				sidebar: {
 					'DEFAULT': 'hsl(var(--sidebar-background))',
 					'foreground': 'hsl(var(--sidebar-foreground))',

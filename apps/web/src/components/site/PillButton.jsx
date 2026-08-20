@@ -3,11 +3,11 @@ import { cn } from '@/lib/utils';
 
 const variants = {
     primary:
-        'bg-[#0F4CBA] text-white hover:bg-[#0d43a4] shadow-soft hover:shadow-lift focus-visible:ring-[#0F4CBA]/40',
+        'bg-brand-accent text-brand-dark hover:bg-[#c9e448] shadow-soft hover:shadow-lift focus-visible:ring-brand-accent/40 font-semibold',
     ghost:
-        'bg-white/70 text-[#0F4CBA] border border-[#E5E7EB] hover:border-[#3B82F6]/60 hover:bg-white ripple-dark focus-visible:ring-[#3B82F6]/30',
+        'bg-transparent text-brand-dark border border-brand-dark/25 hover:border-brand-dark hover:bg-brand-dark/5 ripple-dark focus-visible:ring-brand-dark/20',
     soft:
-        'bg-[#EEF5FF] text-[#0F4CBA] hover:bg-[#e2eeff] ripple-dark focus-visible:ring-[#3B82F6]/30',
+        'bg-brand-green/10 text-brand-green hover:bg-brand-green/15 ripple-dark focus-visible:ring-brand-green/30',
 };
 
 const PillButton = React.forwardRef(function PillButton(
@@ -56,8 +56,8 @@ const PillButton = React.forwardRef(function PillButton(
             }}
             onClick={handleClick}
             className={cn(
-                'ripple-btn inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium tracking-tight',
-                'min-h-[48px] cursor-pointer select-none transition-all duration-200 ease-out',
+                'ripple-btn inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[13px] font-semibold tracking-[0.01em]',
+                'min-h-[48px] cursor-pointer select-none transition-all duration-250 ease-out will-change-transform',
                 'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.975]',
                 'focus:outline-none focus-visible:ring-4',
                 variants[variant],

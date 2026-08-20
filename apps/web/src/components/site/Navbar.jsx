@@ -1,29 +1,47 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, HeartHandshake } from 'lucide-react';
+import { Menu, X, HeartHandshake } from 'lucide-react';
 import PillButton from '@/components/site/PillButton';
 import { cn } from '@/lib/utils';
 
 const links = [
-    { id: 'about', label: 'About' },
-    { id: 'activities', label: 'Activities' },
-    { id: 'awards', label: 'Awards' },
-    { id: 'gallery', label: 'Gallery' },
-    { id: 'donors', label: 'Donors' },
-    { id: 'contact', label: 'Contact' },
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About' },
+    { path: '/services', label: 'Services' },
+    { path: '/gallery', label: 'Gallery' },
+    { path: '/donate', label: 'Donate' },
+    { path: '/contact', label: 'Contact' },
 ];
 
-const moreLinks = [
-    { id: 'impact', label: 'Our Impact' },
-    { id: 'voices', label: 'Testimonials' },
-    { id: 'faq', label: 'FAQ' },
-];
+const menuVariants = {
+    closed: {
+        opacity: 0,
+        scale: 0.96,
+        transition: {
+            staggerChildren: 0.04,
+            staggerDirection: -1
+        }
+    },
+    open: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            staggerChildren: 0.05,
+            delayChildren: 0.04
+        }
+    }
+};
+
+const itemVariants = {
+    closed: { opacity: 0, x: -8, transition: { duration: 0.12 } },
+    open: { opacity: 1, x: 0, transition: { duration: 0.2, ease: 'easeOut' } }
+};
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [open, setOpen] = useState(false);
-    const [moreOpen, setMoreOpen] = useState(false);
-    const [active, setActive] = useState('home');
+    const { pathname } = useLocation();
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 24);
@@ -33,126 +51,67 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    useEffect(() => {
-        const ids = ['home', ...links.map((l) => l.id), ...moreLinks.map((l) => l.id)];
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) setActive(entry.target.id);
-                });
-            },
-            { rootMargin: '-45% 0px -50% 0px' },
-        );
-
-        ids.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
-    const go = (id) => {
-        setOpen(false);
-        setMoreOpen(false);
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-
     return (
         <header
             className={cn(
                 'fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out',
-                scrolled ? 'py-2' : 'py-4',
+                scrolled ? 'py-1.5' : 'py-2.5',
             )}
         >
             <nav
                 className={cn(
-                    'mx-auto flex max-w-[84rem] items-center justify-between gap-6 rounded-full px-5 transition-all duration-300 ease-out',
-                    scrolled
-                        ? 'glass border border-white/70 shadow-soft py-2.5 mx-4 lg:mx-auto'
-                        : 'border border-transparent py-3 mx-4 lg:mx-auto',
+                    'mx-auto flex max-w-[84rem] items-center justify-between gap-4 rounded-full px-4 sm:px-5 transition-all duration-300 ease-out',
+                    scrolled ? 'glass border border-white/70 shadow-soft py-1.5 mx-3 sm:mx-4 lg:mx-auto' : 'border border-transparent py-2 mx-3 sm:mx-4 lg:mx-auto',
                 )}
             >
-                <button
-                    onClick={() => go('home')}
-                    className="group flex items-center gap-3 rounded-full pr-3 text-left transition-transform duration-200 active:scale-[0.98]"
+                <Link
+                    to="/"
+                    className="group flex items-center gap-2.5 rounded-full pr-3 text-left transition-transform duration-200 active:scale-[0.98]"
                 >
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0F4CBA] text-white shadow-soft transition-transform duration-300 group-hover:scale-105">
-                        <HeartHandshake className="h-5 w-5" strokeWidth={1.75} />
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-accent text-brand-dark shadow-soft transition-transform duration-300 group-hover:scale-105">
+                        <HeartHandshake className="h-4.5 w-4.5" strokeWidth={1.75} />
                     </span>
                     <span className="leading-tight">
-                        <span className="block font-display text-[15px] text-[#111827]">Balivada Ramarao Patnaik</span>
-                        <span className="block text-[11px] uppercase tracking-[0.22em] text-[#4B5563]">Charitable Trust</span>
+                        <span className="block font-display text-[13px] font-semibold tracking-[-0.01em] text-[#111827]">Balivada Ramarao PATNAIK</span>
+                        <span className="block text-[9px] uppercase tracking-[0.2em] text-[#4B5563]">Charitable Trust</span>
                     </span>
-                </button>
+                </Link>
 
                 <div className="hidden items-center gap-1 lg:flex">
                     {links.map((link) => (
-                        <button
-                            key={link.id}
-                            onClick={() => go(link.id)}
-                            className="relative rounded-full px-4 py-2 text-sm text-[#4B5563] transition-colors duration-200 hover:text-[#0F4CBA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/40"
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            className={cn(
+                                "relative rounded-full px-3 py-1.5 text-[13px] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/40",
+                                pathname === link.path ? "text-brand-dark font-semibold" : "text-brand-dark/70 hover:text-brand-dark",
+                                pathname !== link.path && "after:absolute after:bottom-1.5 after:left-4 after:right-4 after:h-[1.5px] after:bg-brand-accent after:scale-x-0 hover:after:scale-x-100 after:origin-center after:transition-transform after:duration-200"
+                            )}
                         >
-                            {active === link.id && (
+                            {pathname === link.path && (
                                 <motion.span
                                     layoutId="nav-active"
-                                    className="absolute inset-0 rounded-full bg-[#EEF5FF]"
+                                    className="absolute inset-0 rounded-full bg-brand-accent/15"
                                     transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                                 />
                             )}
                             <span className="relative">{link.label}</span>
-                        </button>
+                        </Link>
                     ))}
-
-                    <div
-                        className="relative"
-                        onMouseEnter={() => setMoreOpen(true)}
-                        onMouseLeave={() => setMoreOpen(false)}
-                    >
-                        <button
-                            onClick={() => setMoreOpen((v) => !v)}
-                            className="flex items-center gap-1 rounded-full px-4 py-2 text-sm text-[#4B5563] transition-colors duration-200 hover:text-[#0F4CBA]"
-                        >
-                            More
-                            <ChevronDown
-                                className={cn('h-4 w-4 transition-transform duration-200', moreOpen && 'rotate-180')}
-                            />
-                        </button>
-                        <AnimatePresence>
-                            {moreOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                                    transition={{ duration: 0.18, ease: 'easeOut' }}
-                                    className="absolute right-0 top-full mt-3 w-52 overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-2 shadow-lift"
-                                >
-                                    {moreLinks.map((link) => (
-                                        <button
-                                            key={link.id}
-                                            onClick={() => go(link.id)}
-                                            className="block w-full rounded-xl px-3 py-2.5 text-left text-sm text-[#4B5563] transition-colors duration-150 hover:bg-[#EEF5FF] hover:text-[#0F4CBA]"
-                                        >
-                                            {link.label}
-                                        </button>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <PillButton onClick={() => go('donate')} className="hidden px-6 sm:inline-flex">
-                        Donate
-                    </PillButton>
+                    <Link to="/donate" className="hidden sm:inline-flex">
+                        <PillButton as="span" className="px-6">
+                            Donate
+                        </PillButton>
+                    </Link>
                     <button
                         onClick={() => setOpen((v) => !v)}
                         aria-label="Toggle menu"
-                        className="flex h-11 w-11 items-center justify-center rounded-full border border-[#E5E7EB] bg-white/80 text-[#0F4CBA] transition-transform duration-200 active:scale-95 lg:hidden"
+                        className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] bg-white/80 text-brand-dark hover:text-brand-green transition-transform duration-200 active:scale-95 lg:hidden"
                     >
-                        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        {open ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
                     </button>
                 </div>
             </nav>
@@ -160,24 +119,33 @@ const Navbar = () => {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                        className="mx-4 mt-2 rounded-3xl border border-white/70 glass p-3 shadow-lift lg:hidden"
+                        variants={menuVariants}
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                        className="mx-4 mt-2 rounded-3xl border border-white/70 glass p-3 shadow-lift lg:hidden flex flex-col gap-0.5"
                     >
-                        {[...links, ...moreLinks].map((link) => (
-                            <button
-                                key={link.id}
-                                onClick={() => go(link.id)}
-                                className="block w-full rounded-2xl px-4 py-3 text-left text-[15px] text-[#111827] transition-colors duration-150 hover:bg-[#EEF5FF] hover:text-[#0F4CBA]"
-                            >
-                                {link.label}
-                            </button>
+                        {links.map((link) => (
+                            <motion.div key={link.path} variants={itemVariants}>
+                                <Link
+                                    to={link.path}
+                                    onClick={() => setOpen(false)}
+                                    className={cn(
+                                        "block w-full rounded-2xl px-4 py-3 text-left text-[15px] transition-colors duration-150",
+                                        pathname === link.path ? "bg-brand-accent/15 text-brand-dark font-semibold" : "text-brand-dark hover:bg-brand-accent/10 hover:text-brand-dark"
+                                    )}
+                                >
+                                    {link.label}
+                                </Link>
+                            </motion.div>
                         ))}
-                        <PillButton onClick={() => go('donate')} className="mt-2 w-full">
-                            Donate now
-                        </PillButton>
+                        <motion.div variants={itemVariants} className="mt-2">
+                            <Link to="/donate" onClick={() => setOpen(false)} className="block">
+                                <PillButton as="span" className="w-full">
+                                    Donate now
+                                </PillButton>
+                            </Link>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
