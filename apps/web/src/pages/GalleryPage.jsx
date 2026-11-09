@@ -116,6 +116,8 @@ const GalleryPage = () => {
         setSupabasePhotos([]);
 
         const fetchCategoryPhotos = async () => {
+            if (!supabase) return;
+
             try {
                 const { data, error } = await supabase.storage.from('galleryy').list(activeCategory);
                 if (error) throw error;

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-// Social + canonical tags only. The page's own <Helmet> must keep a literal
-// <title> and <meta name="description">, because the llms.txt build step reads
-// those two tags straight out of the page file's source.
 const Seo = ({ title, description, image, url, siteName, type = 'website' }) => {
     const canonical = url || window.location.origin + window.location.pathname;
 
     return (
         <Helmet>
+            {title && <title>{title}</title>}
+            {description && <meta name="description" content={description} />}
             <link rel="canonical" href={canonical} />
             <meta property="og:url" content={canonical} />
             <meta property="og:type" content={type} />
